@@ -101,6 +101,7 @@ qmc_dis.iloc[1,1]=qmc.discrepancy(X)
 ax[2,1].scatter(X[:,0],X[:,1],color=pt_clr[1])
 ax[2,1].set_title("Halton (Scipy)")
 
+
 #%% Halton tensorflow_probability
 sequence_indices = tf.range(start=0, limit= n,
                             dtype=tf.int32)

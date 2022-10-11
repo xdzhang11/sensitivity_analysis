@@ -8,14 +8,12 @@ import os
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
 from sklearn.linear_model import LinearRegression, SGDRegressor
-from sklearn.metrics import mean_absolute_error
-from sklearn.metrics import r2_score
+from sklearn.metrics import mean_absolute_error, r2_score
 from sklearn.ensemble import RandomForestRegressor
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
-from sklearn.preprocessing import StandardScaler
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from scipy.stats import norm, qmc
 
 #%%
@@ -24,7 +22,7 @@ df = pd.read_hdf(filename_Xy, 'Xy')
 
 # %%
 # plt.figure()
-# plt.scatter(df.wsp, df.Mx_blade)
+plt.scatter(df.wsp, df.Mx_blade)
 
 #%%
 df.head()
@@ -107,7 +105,7 @@ for k in range(len(var_list)):
         # sigma_max = 0.18*(6.8+0.75*u)
         # sigma = sigma_min+(sigma_max-sigma_min)*ti_n
         # ti = sigma/u
-        y_n.append(np.percentile(gbrm.predict(X_n),99))
+        y_n.append(np.percentile(gbrm.predict(X_n),10))
 
     y_n_list.append(y_n)
     
