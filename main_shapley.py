@@ -6,7 +6,7 @@ num_cores = joblib.cpu_count()
 #from cmath import pi
 from scipy.stats import norm, rayleigh, weibull_min
 from matplotlib import style
-from sklearn.ensemble import RandomForestRegressor
+
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
@@ -15,32 +15,13 @@ from numpy.random import multivariate_normal, rand
 from itertools import permutations
 from numpy.linalg import inv
 import time
-#%%
-filename_Xy = os.path.join('Xy', 'Xy.h5')
-df = pd.read_hdf(filename_Xy, 'Xy')
-df.head()
-#%%
-X = df.iloc[:,0:5]
-X = X.copy()
-X.cl = 0.7+(1.3-0.7)*X.cl
-X.bladeIx  = 0.7+(1.3-0.7)*X.bladeIx
-X.towerIx  = 0.7+(1.3-0.7)*X.towerIx
 
-#%%
-u = 3+X.loc[:,'wsp']*(27-3)
-sigma_min = np.maximum(0, 0.1*(u-20))
-sigma_max = 0.18*(6.8+0.75*u)
-sigma = sigma_min+(sigma_max-sigma_min)*X.loc[:,'ti']
-ti = sigma/u
-X.loc[:,'wsp'] = u
-X.loc[:,'ti'] = ti
-X.head()
-
-#%%
-y = df.Mx_tower # blade tip clearance
-gbr = RandomForestRegressor()
-gbrm = gbr.fit(X, y)
 #y_pred = gbrm.predict(X_test)
+
+gbrm = joblib.load("models/randomforests.joblib")
+def cost(x):
+    return gbrm.predict(x)
+
 
 def trans(M):
     X_v = pd.DataFrame(data = np.zeros((len(M),d)), columns=['wsp', 'ti', 'cl', 'bladeIx', 'towerIx'])
@@ -67,7 +48,7 @@ t = time.time()
 
 A = rand(Nv,d)
 X_A = trans(A)
-y =  gbrm.predict(X_A)
+y =  cost(X_A)
 
 EY = np.mean(y)
 VarY = np.var(y)
@@ -148,7 +129,7 @@ def f_shapley(p):
                 X_B[l*Ni:(l+1)*Ni,:] = X_t
             
             X_all = trans(X_B)
-            y_all = gbrm.predict(X_all)
+            y_all = cost(X_all)
             
 
         if j == d-1:
