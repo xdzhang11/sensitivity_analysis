@@ -91,7 +91,6 @@ def f_shapley(p):
         else: 
             Sj = pi[:j+1]         # set of the 1st-jth elements in pi 
             Sjc = pi[j+1:]        # set of the (j+1)th-kth elements in pi
-            xjc = multivariate_normal([0, 0], [[1, 0], [0, 1]] , 1)
             for l in range(No): # loop through outer loop
                 if (0 in Sjc) & (1 in Sjc):
                     loc_0 = np.where(Sjc == 0)[0][0]
@@ -157,8 +156,7 @@ def f_shapley(p):
             delta = c_hat-prevC
         else:
             cVar = []           # conditional variance    
-            for l in range(No): # loop through outer loop
-              
+            for l in range(No): # loop through outer loop              
                 c_Y = y_all[l*Ni:(l+1)*Ni] 
                 cVar.append(np.var(c_Y))
 
