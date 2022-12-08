@@ -16,23 +16,17 @@ from itertools import permutations
 from numpy.linalg import inv
 import time
 
+from sklearn.ensemble import RandomForestRegressor
+
+
+
+
+from f_dep_inputs import trans
 #y_pred = gbrm.predict(X_test)
 
 gbrm = joblib.load("models/randomforests.joblib")
 def cost(x):
     return gbrm.predict(x)
-
-
-def trans(M):
-    X_v = pd.DataFrame(data = np.zeros((len(M),d)), columns=['wsp', 'ti', 'cl', 'bladeIx', 'towerIx'])
-    v_ave = 8.5
-    r_scale = np.sqrt(2/np.pi)*v_ave
-    X_v.wsp = rayleigh.ppf(M[:,0], loc=0, scale=r_scale)
-    X_v.ti  = weibull_min.ppf(M[:,1], 2.5)
-    X_v.cl = norm.ppf(M[:,2], loc=1, scale=0.05)
-    X_v.bladeIx = norm.ppf(M[:,3], loc=1, scale=0.05)
-    X_v.towerIx = norm.ppf(M[:,4], loc=1, scale=0.05)
-    return X_v
 
 #%% Shapley effects
 d = 5       # dimension of inputs
@@ -45,9 +39,12 @@ m = 1000
 t = time.time()
 
 #%%
+rho = 0.5
 
-A = rand(Nv,d)
-X_A = trans(A)
+A = rand(Nv,d)  #This is not correct, wind speed and turbulence intensity should be correlated
+A[:,0:2] = norm.cdf(multivariate_normal([0, 0], [[1, rho], [rho, 1]] , Nv))
+
+X_A = trans(A,d)
 y =  cost(X_A)
 
 EY = np.mean(y)
@@ -55,9 +52,7 @@ VarY = np.var(y)
 
 
 # %%
-rho = 0.5
-
-def f_shapley(p):
+def f_shapley(p,cost):
     Sh = np.zeros(d)
     Sh2 = np.zeros(d)
     pi = np.random.permutation(d)
@@ -128,7 +123,7 @@ def f_shapley(p):
                     X_t[h,:] = x[s_index]
                 X_B[l*Ni:(l+1)*Ni,:] = X_t
             
-            X_all = trans(X_B)
+            X_all = trans(X_B,d)
             y_all = cost(X_all)
             
 
@@ -150,7 +145,7 @@ def f_shapley(p):
     return Sh, Sh2
 
 
-res = Parallel(n_jobs=num_cores)(delayed(f_shapley)(i) for i in range(m))
+res = Parallel(n_jobs=num_cores)(delayed(f_shapley)(i,cost) for i in range(m))
 
 r=[item[0] for item in res]
 r2=[item[1] for item in res]
