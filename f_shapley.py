@@ -6,9 +6,9 @@ num_cores = joblib.cpu_count()-1
 import numpy as np
 
 
-def shapley(cost, d, Nv, Ni, No, m, X_dep, X_j):
+def shapley(cost, d, Nv, Ni, No, m, X_dep, X_j, rho = 0.5):
 
-    X_A = X_j(Nv, d)
+    X_A = X_j(Nv, d, rho)
     y =  cost(X_A)
     VarY = np.var(y)
     
@@ -26,7 +26,7 @@ def shapley(cost, d, Nv, Ni, No, m, X_dep, X_j):
                 c_hat = VarY
                 delta = c_hat-prevC
             else:
-                X_D = X_dep(pi, s_index, No, Ni, d, j) 
+                X_D = X_dep(pi, s_index, No, Ni, d, j, rho) 
                 y_all = cost(X_D)
                 cVar = []           # conditional variance    
                 for l in range(No): # loop through outer loop              
