@@ -1,7 +1,5 @@
 from scipy.stats import norm, rayleigh, weibull_min
-from matplotlib import style
 from numpy.random import multivariate_normal, rand
-import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
@@ -18,15 +16,11 @@ def trans(M, d):
 
 
 def X_j(Nv, d):
-
     rho = 0.5
     A = rand(Nv,d)  
     A[:,0:2] = norm.cdf(multivariate_normal([0, 0], [[1, rho], [rho, 1]] , Nv))
-    
     x = trans(A,d)
     return x
-    
-    
     
 
 def X_dep(pi, s_index, No, Ni, d, j):
@@ -35,46 +29,41 @@ def X_dep(pi, s_index, No, Ni, d, j):
     Sj = pi[:j+1]         # set of the 1st-jth elements in pi 
     Sjc = pi[j+1:]        # set of the (j+1)th-kth elements in pi
     for l in range(No): # loop through outer loop
+        xjc = rand(1,len(Sjc)).flatten()
+    
         if (0 in Sjc) & (1 in Sjc):
             loc_0 = np.where(Sjc == 0)[0][0]
             loc_1 = np.where(Sjc == 1)[0][0]
             a = multivariate_normal([0, 0], [[1, rho], [rho, 1]] , 1).flatten()
             xn = norm.cdf(a)
-            xjc = rand(1,len(Sjc)).flatten()
             xjc[loc_0] = xn[0]
             xjc[loc_1] = xn[1]
         elif 0 in Sjc:
             loc_0 = np.where(Sjc == 0)[0][0]
             a = norm.rvs()
             xn = norm.cdf(a)
-            xjc = rand(1,len(Sjc)).flatten()
             xjc[loc_0] = xn
         elif 1 in Sjc:
             loc_1 = np.where(Sjc == 1)[0][0]
             a = norm.rvs()
             xn = norm.cdf(a)
-            xjc = rand(1,len(Sjc)).flatten()
-            xjc[loc_1] = xn
-        else:
-            xjc = rand(1,len(Sjc)).flatten()
+            xjc[loc_1] = xn          
   
         X_t = np.zeros((Ni,d))
         for h in range(Ni):     # loop through inner loop
-
+            xj = rand(1,len(Sj)).flatten()
             if (0 in Sjc) & (1 in Sjc):
-                xj = rand(1,len(Sj)).flatten()
+                pass
             elif 0 in Sjc:
                 loc_1 = np.where(Sj == 1)[0][0]
                 b = norm.rvs(rho*a, np.sqrt(1-rho**2))
                 xn2 = norm.cdf(b)
-                xj = rand(1,len(Sj)).flatten()
                 xj[loc_1] = xn2
 
             elif 1 in Sjc:
                 loc_0 = np.where(Sj == 0)[0][0]
                 b = norm.rvs(rho*a, np.sqrt(1-rho**2))
                 xn2 = norm.cdf(b)
-                xj = rand(1,len(Sj)).flatten()
                 xj[loc_0] = xn2
         
             else:
@@ -82,7 +71,6 @@ def X_dep(pi, s_index, No, Ni, d, j):
                 loc_1 = np.where(Sj == 1)[0][0]
                 a = multivariate_normal([0, 0], [[1, rho], [rho, 1]] , 1).flatten()
                 xn2 = norm.cdf(a)
-                xj = rand(1,len(Sj)).flatten()
                 xj[loc_0] = xn2[0]
                 xj[loc_1] = xn2[1]
             
