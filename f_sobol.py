@@ -1,7 +1,7 @@
 from scipy.stats import qmc
 import numpy as np
 from numpy.random import rand
-from scipy.stats import norm, halfnorm, rayleigh, weibull_min
+from scipy.stats import norm, rayleigh, weibull_min
 import pandas as pd
 import copy
 
