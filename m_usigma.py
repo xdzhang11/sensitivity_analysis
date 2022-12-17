@@ -68,7 +68,7 @@ def pdf_sigma(s):
 
 
 #%% Acceptance-rejection sampling
-def rvs_sigma(n):
+def rvs_s(n):
     rv = []
     for k in range(int(n)):
         while True:
@@ -80,7 +80,7 @@ def rvs_sigma(n):
     return rv
 
 
-rv = rvs_sigma(1e4)
+rv = rvs_s(1e5)
 
 #%% Compare pdf with generated sample
 x = np.linspace(0, 5, 100)
@@ -170,3 +170,107 @@ for k in range(n):
 area = m/n*0.5*40
 
 
+#%%
+def rvs_j(n):
+    v_ave = 8.5
+    r_scale = np.sqrt(2 / np.pi) * v_ave
+    v_u = rayleigh.cdf(27, loc=0, scale=r_scale)
+    v_l = rayleigh.cdf(3, loc=0, scale=r_scale)
+
+    r = np.random.uniform(low=v_u, high=v_l, size=int(n))
+    u = rayleigh.ppf(r, loc=0, scale=r_scale)
+    wb_shape = 0.27 * u + 1.4
+    Iref = 0.12
+    wb_scale = Iref * (0.75 * u + 3.3)
+    sigma = weibull_min.rvs(wb_shape, loc=0, scale=wb_scale)
+    sigma_min = np.maximum(0, 0.1 * (u - 20))
+    sigma_max = 0.18 * (6.8 + 0.75 * u)
+    for k in range(int(n)):
+        while (sigma[k] < sigma_min[k]) or (sigma[k] > sigma_max[k]):
+            sigma[k] = weibull_min.rvs(wb_shape[k], loc=0, scale=wb_scale[k])
+    return u, sigma
+
+
+rv1, rv2 = rvs_j(1e5)
+
+v_ave = 8.5
+r_scale = np.sqrt(2 / np.pi) * v_ave
+x = np.linspace(0, 40, 100)
+pdf_u = []
+for k in range(100):
+    pdf_u.append(rayleigh.pdf(x[k], loc=0, scale=r_scale))
+fig, ax = plt.subplots(1, 1)
+plt.plot(x, pdf_u)
+plt.hist(rv1, 50, density=True)
+plt.show()
+
+x = np.linspace(0, 5, 100)
+pdf_s = []
+for k in range(100):
+    pdf_s.append(pdf_sigma(x[k]))
+
+fig, ax = plt.subplots(1, 1)
+plt.plot(x, pdf_s)
+plt.hist(rv2, 50, density=True)
+plt.show()
+
+
+
+
+
+
+#%%
+
+def rvs_u(n):
+    v_ave = 8.5
+    r_scale = np.sqrt(2 / np.pi) * v_ave
+    v_u = rayleigh.cdf(27, loc=0, scale=r_scale)
+    v_l = rayleigh.cdf(3, loc=0, scale=r_scale)
+    r = np.random.uniform(low=v_u, high=v_l, size=int(n))
+    u = rayleigh.ppf(r, loc=0, scale=r_scale)
+    return u
+
+rv= rvs_u(1e5)
+
+v_ave = 8.5
+r_scale = np.sqrt(2 / np.pi) * v_ave
+x = np.linspace(0, 40, 100)
+pdf_u = []
+for k in range(100):
+    pdf_u.append(rayleigh.pdf(x[k], loc=0, scale=r_scale))
+fig, ax = plt.subplots(1, 1)
+plt.plot(x, pdf_u)
+plt.hist(rv, 50, density=True)
+plt.show()
+
+
+
+
+#%%
+def rvs_su(n, u):
+    wb_shape = 0.27 * u + 1.4
+    Iref = 0.12
+    wb_scale = Iref * (0.75 * u + 3.3)
+    sigma = weibull_min.rvs(wb_shape, loc=0, scale=wb_scale, size=int(n))
+    sigma_min = np.maximum(0, 0.1 * (u - 20))
+    sigma_max = 0.18 * (6.8 + 0.75 * u)
+    for k in range(int(n)):
+        while (sigma[k] < sigma_min) or (sigma[k] > sigma_max):
+            sigma[k] = weibull_min.rvs(wb_shape, loc=0, scale=wb_scale)
+    return sigma
+
+u = 15
+rv = rvs_su(1e5, u)
+wb_shape = 0.27 * u + 1.4
+Iref = 0.12
+wb_scale = Iref * (0.75 * u + 3.3)
+
+x = np.linspace(0, 5, 100)
+pdf_s = []
+for k in range(100):
+    pdf_s.append(weibull_min.pdf(x[k], wb_shape, loc=0, scale=wb_scale))
+
+fig, ax = plt.subplots(1, 1)
+plt.plot(x, pdf_s)
+plt.hist(rv, 50, density=True)
+plt.show()
