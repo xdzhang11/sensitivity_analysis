@@ -25,8 +25,8 @@ X.loc[:, 'ti'] = ti
 X.head()
 
 #%%
-y = df.Mx_tower # blade tip clearance
+y = df.Mres_blade  # blade tip clearance
 gbr = RandomForestRegressor()
 gbrm = gbr.fit(X, y)
 
-joblib.dump(gbrm, "models/randomforests.joblib")
+joblib.dump(gbrm, "models/Mres_blade.joblib")
