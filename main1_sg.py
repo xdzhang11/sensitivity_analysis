@@ -29,7 +29,10 @@ sigma_max = 0.18*(6.8+0.75*u)
 sigma = sigma_min+(sigma_max-sigma_min)*X.loc[:,'ti']
 ti = sigma/u
 X.loc[:, 'wsp'] = u
-X.loc[:, 'ti'] = ti
+#X.loc[:, 'ti'] = ti
+
+X.loc[:, 'ti'] = sigma
+
 X.head()
 y = df.Mx_tower
 
