@@ -1,3 +1,6 @@
+# Joint and conditional distributions of u (wind speed) and sigma (standard deviation)
+# Last update 1/13/2013
+# @author: xiazang@dtu.dk
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import rayleigh, weibull_min
@@ -11,13 +14,14 @@ def pdf_rayleigh(x, loc=0, scale=1):
     y = x*np.exp(-x**2/2)/scale
     return y
 
-#
+
 # fig, ax = plt.subplots(1, 1)
 # x = np.linspace(rayleigh.ppf(0.01, loc=1, scale=2),
 #                 rayleigh.ppf(0.99, loc=1, scale=2), 100)
 # ax.plot(x, rayleigh.pdf(x, loc=1, scale=2), 'r-', lw=2, alpha=0.6, label='rayleigh pdf')
 # ax.plot(x, pdf_rayleigh(x, loc=1, scale=2), 'b--', lw=2, alpha=0.6, label='pdf_rayleigh')
 # plt.legend()
+# plt.savefig("Figures/test.pdf", format="pdf", bbox_inches="tight")
 # plt.show()
 
 
@@ -54,7 +58,7 @@ def pdf_sigma(s):
     return t
 
 
-# #%% Pdf of sigma, sampling based integral
+#%% Pdf of sigma, sampling based integral
 # def pdf_sigma2(x):
 #     v_ave = 8.5
 #     r_scale = np.sqrt(2 / np.pi) * v_ave
@@ -67,7 +71,7 @@ def pdf_sigma(s):
 #     return t
 
 
-#%% Acceptance-rejection sampling
+#%% Acceptance-rejection sampling of sigma
 def rvs_s(n):
     rv = []
     for k in range(int(n)):
@@ -80,20 +84,24 @@ def rvs_s(n):
     rv = np.array(rv)
     return rv
 
-#
+
+#%% Compare pdf with generated sample
+
 # rv = rvs_s(1e5)
-#
-# #%% Compare pdf with generated sample
 # x = np.linspace(0, 5, 100)
 # pdf_s = []
 # for k in range(100):
 #     pdf_s.append(pdf_sigma(x[k]))
 #
 # fig, ax = plt.subplots(1, 1)
-# plt.plot(x, pdf_s)
-# plt.hist(rv, 50, density=True)
+# plt.plot(x, pdf_s, 'r-', lw=2, alpha=0.6, label='pdf')
+# plt.hist(rv, 50, density=True, label='sample')
+# plt.xlabel('standard deviation of wind speed (m/s)')
+# plt.ylabel('probability density')
+# plt.legend()
+# plt.savefig("Figures/pdf_sigma.pdf", format="pdf", bbox_inches="tight")
 # plt.show()
-
+#
 # #%% Monte Carlo method, check area under pdf
 # n = int(1e5)
 # xy_min = [0, 0]
@@ -172,7 +180,7 @@ def rvs_us(n, sigma):
 # area = m/n*0.5*40
 
 
-#%%
+#%% Generate random variables from joint distribution
 def rvs_j(n):
     v_ave = 8.5
     r_scale = np.sqrt(2 / np.pi) * v_ave
@@ -223,11 +231,7 @@ def rvs_j(n):
 # plt.show()
 
 
-
-
-
-
-#%%
+#%% Random sample of wind speed u
 def rvs_u(n):
     v_ave = 8.5
     r_scale = np.sqrt(2 / np.pi) * v_ave
@@ -238,8 +242,10 @@ def rvs_u(n):
     u = np.array(u)
     return u
 
+
+# #%% pdf versus sample
 # rv= rvs_u(1e5)
-#
+# #
 # v_ave = 8.5
 # r_scale = np.sqrt(2 / np.pi) * v_ave
 # x = np.linspace(0, 40, 100)
@@ -247,14 +253,13 @@ def rvs_u(n):
 # for k in range(100):
 #     pdf_u.append(rayleigh.pdf(x[k], loc=0, scale=r_scale))
 # fig, ax = plt.subplots(1, 1)
-# plt.plot(x, pdf_u)
+# plt.plot(x, pdf_u/(1-rayleigh.cdf(3, loc=0, scale=r_scale)))
+# # the pdf is truncated pdf, not original Rayleigh
 # plt.hist(rv, 50, density=True)
 # plt.show()
 
 
-
-
-#%%
+#%% Random sample of sigma conditional on u
 def rvs_su(n, u):
     wb_shape = 0.27 * u + 1.4
     Iref = 0.12
@@ -268,6 +273,7 @@ def rvs_su(n, u):
     sigma = np.array(sigma)
     return sigma
 
+# #%%
 # u = 15
 # rv = rvs_su(1e5, u)
 # wb_shape = 0.27 * u + 1.4
@@ -279,7 +285,12 @@ def rvs_su(n, u):
 # for k in range(100):
 #     pdf_s.append(weibull_min.pdf(x[k], wb_shape, loc=0, scale=wb_scale))
 #
+#
 # fig, ax = plt.subplots(1, 1)
-# plt.plot(x, pdf_s)
-# plt.hist(rv, 50, density=True)
+# plt.plot(x, pdf_s, 'r-', lw=2, alpha=0.6, label='pdf')
+# plt.hist(rv, 50, density=True, label='sample')
+# plt.xlabel('standard deviation of wind speed (m/s) ($x$ = 15 m/s)')
+# plt.ylabel('conditional probability density')
+# plt.legend()
+# plt.savefig("Figures/pdf_sigma_u.pdf", format="pdf", bbox_inches="tight")
 # plt.show()

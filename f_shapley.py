@@ -1,9 +1,11 @@
-#%% all variables
-#%reset -f
+# Shapley effects evaluation in parallel
+# Last update 1/13/2013
+# @author: xiazang@dtu.dk
 import joblib
 from joblib import Parallel, delayed
-num_cores = joblib.cpu_count()-1
 import numpy as np
+
+num_cores = joblib.cpu_count()-1
 
 
 def shapley(cost, d, Nv, Ni, No, m, X_dep, X_j, rho = 0.5):
@@ -57,6 +59,3 @@ def shapley(cost, d, Nv, Ni, No, m, X_dep, X_j, rho = 0.5):
     return Sh
 
 
-
-
-# %%
