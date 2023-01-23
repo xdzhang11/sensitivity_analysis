@@ -8,13 +8,13 @@ import numpy as np
 num_cores = joblib.cpu_count()-1
 
 
-def shapley(cost, d, Nv, Ni, No, m, X_dep, X_j, rho = 0.5):
+def shapley(cost, d, Nv, Ni, No, m, X_dep, X_j, rho=0.5):
 
     X_A = X_j(Nv, d, rho)
     y =  cost(X_A)
     VarY = np.var(y)
     
-    def f_shapley_s(p,cost):
+    def f_shapley_s(p, cost):
         Sh = np.zeros(d)
         Sh2 = np.zeros(d)
         pi = np.random.permutation(d)

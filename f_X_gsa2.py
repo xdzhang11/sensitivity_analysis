@@ -1,4 +1,5 @@
-from scipy.stats import norm, rayleigh, weibull_min
+from scipy.stats import norm, rayleigh, weibull_min, halfnorm
+from cmath import pi
 from numpy.random import multivariate_normal, rand
 import pandas as pd
 import numpy as np
@@ -8,14 +9,19 @@ from m_usigma import rvs_j, rvs_u, rvs_s, rvs_su, rvs_us
 
 
 def trans_us(M, d):
-    X_v = pd.DataFrame(data=np.zeros((len(M), d)), columns=['wsp', 'ti', 'cl', 'bladeIx', 'towerIx'])
-    X_v.wsp = M[:, 0]
+    x_v = pd.DataFrame(data=np.zeros((len(M), d)), columns=['wsp', 'sigma', 'cl', 'bladeIx', 'towerIx'])
+    x_v.wsp = M[:, 0]
+    x_v.sigma = M[:, 1]
+    # half normal distribution parameters
+    mu_hn = 1
+    scale_hn = 0.05/np.sqrt(1-2/pi)
+    x_v.cl = 2-halfnorm.ppf(M[:, 2], loc=mu_hn, scale=scale_hn)
 
-    X_v.ti = M[:, 1]/M[:, 0]
-    X_v.cl = norm.ppf(M[:, 2], loc=1, scale=0.05)
-    X_v.bladeIx = norm.ppf(M[:, 3], loc=1, scale=0.05)
-    X_v.towerIx = norm.ppf(M[:, 4], loc=1, scale=0.05)
-    return X_v
+    # x_v.cl = norm.ppf(M[:, 2], loc=1, scale=0.05)
+    x_v.bladeIx = norm.ppf(M[:, 3], loc=1, scale=0.05)
+    x_v.towerIx = norm.ppf(M[:, 4], loc=1, scale=0.05)
+    return x_v
+
 
 def X_j_us(Nv, d, rho):
     A = rand(Nv, d)

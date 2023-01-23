@@ -1,22 +1,28 @@
-from scipy.stats import norm, rayleigh, weibull_min
+from scipy.stats import norm, rayleigh, weibull_min, halfnorm
 from numpy.random import multivariate_normal, rand
 import pandas as pd
 import numpy as np
-from numpy.linalg import multi_dot, inv
+import json
+from cmath import pi
+
+
+fn_wb = "results/sigma_wb_pars.txt"
+wb_pars = json.load(open(fn_wb))
 
 
 #%% wind turbine example
-
 def trans_wt(M, d):
-    X_v = pd.DataFrame(data=np.zeros((len(M), d)), columns=['wsp', 'ti', 'cl', 'bladeIx', 'towerIx'])
+    x_v = pd.DataFrame(data=np.zeros((len(M), d)), columns=['wsp', 'sigma', 'cl', 'bladeIx', 'towerIx'])
     v_ave = 8.5
     r_scale = np.sqrt(2 / np.pi) * v_ave
-    X_v.wsp = rayleigh.ppf(M[:, 0], loc=0, scale=r_scale)
-    X_v.ti = weibull_min.ppf(M[:, 1], 2.5)
-    X_v.cl = norm.ppf(M[:, 2], loc=1, scale=0.05)
-    X_v.bladeIx = norm.ppf(M[:, 3], loc=1, scale=0.05)
-    X_v.towerIx = norm.ppf(M[:, 4], loc=1, scale=0.05)
-    return X_v
+    x_v.wsp = rayleigh.ppf(M[:, 0], loc=0, scale=r_scale)
+    x_v.sigma = weibull_min.ppf(M[:, 1], c=wb_pars['c'], loc=wb_pars['loc'], scale=wb_pars['scale'])
+    mu_hn = 1
+    scale_hn = 0.05/np.sqrt(1-2/pi)
+    x_v.cl = 2-halfnorm.ppf(M[:, 2], loc=mu_hn, scale=scale_hn)
+    x_v.bladeIx = norm.ppf(M[:, 3], loc=1, scale=0.05)
+    x_v.towerIx = norm.ppf(M[:, 4], loc=1, scale=0.05)
+    return x_v
 
 
 def X_j_wt(Nv, d, rho):
