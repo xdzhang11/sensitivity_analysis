@@ -8,6 +8,8 @@ from sklearn.metrics import mean_absolute_error, r2_score
 from sklearn.ensemble import RandomForestRegressor
 import xgboost as xgb
 
+from sklearn.linear_model import LinearRegression
+
 import multiprocessing
 import os
 import joblib
@@ -21,7 +23,7 @@ X = df.iloc[:, 0:5]
 
 #%%
 varlist = ['bTD', 'Mx_blade', 'Mx_tower']
-var = varlist[1]
+var = varlist[2]
 
 y = df[var]  # blade tip clearance
 # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
@@ -124,3 +126,7 @@ fn_cvs = "results/cvs_{}.txt".format(var)
 with open(fn_cvs, 'w') as f:
     print(cvs, file=f)
 
+#%% linear regression
+
+lm = LinearRegression()
+cvs_lr = np.mean(cross_val_score(lm, X, y, cv=10))

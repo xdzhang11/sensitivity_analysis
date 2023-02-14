@@ -1,5 +1,4 @@
 from scipy.stats import norm, rayleigh, weibull_min, halfnorm
-from cmath import pi
 from numpy.random import multivariate_normal, rand
 import pandas as pd
 import numpy as np
@@ -14,9 +13,8 @@ def trans_us(M, d):
     x_v.sigma = M[:, 1]
     # half normal distribution parameters
     mu_hn = 1
-    scale_hn = 0.05/np.sqrt(1-2/pi)
+    scale_hn = 0.05/np.sqrt(1-2/np.pi)
     x_v.cl = 2-halfnorm.ppf(M[:, 2], loc=mu_hn, scale=scale_hn)
-
     # x_v.cl = norm.ppf(M[:, 2], loc=1, scale=0.05)
     x_v.bladeIx = norm.ppf(M[:, 3], loc=1, scale=0.05)
     x_v.towerIx = norm.ppf(M[:, 4], loc=1, scale=0.05)

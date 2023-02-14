@@ -8,7 +8,7 @@ import numpy as np
 num_cores = joblib.cpu_count()-1
 
 
-def shapley(cost, d, Nv, Ni, No, m, X_dep, X_j, rho=0.5):
+def shapley(cost, d, Nv, Ni, No, m, X_dep, X_j, rho=0.2):
 
     X_A = X_j(Nv, d, rho)
     y =  cost(X_A)
@@ -19,14 +19,14 @@ def shapley(cost, d, Nv, Ni, No, m, X_dep, X_j, rho=0.5):
         Sh2 = np.zeros(d)
         pi = np.random.permutation(d)
         s_index = np.argsort(pi)       # sorted 
-                
+
         prevC = 0
         
         for j in range(d): # loop through dimension
                 
             if j == d-1:
                 c_hat = VarY
-                delta = c_hat-prevC
+                #delta = c_hat-prevC
             else:
                 X_D = X_dep(pi, s_index, No, Ni, d, j, rho) 
                 y_all = cost(X_D)
@@ -34,9 +34,9 @@ def shapley(cost, d, Nv, Ni, No, m, X_dep, X_j, rho=0.5):
                 for l in range(No): # loop through outer loop              
                     c_Y = y_all[l*Ni:(l+1)*Ni] 
                     cVar.append(np.var(c_Y))
-    
+
                 c_hat = np.mean(cVar)
-                delta = c_hat-prevC
+            delta = c_hat-prevC
             
             Sh[pi[j]] = Sh[pi[j]] + delta
             Sh2[pi[j]] = Sh2[pi[j]] + delta**2
