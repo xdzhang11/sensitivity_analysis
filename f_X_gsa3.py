@@ -56,30 +56,30 @@ def X_dep_wt(pi, s_index, No, Ni, d, j, rho):
             xn = norm.cdf(a)
             xjc[loc_1] = xn
 
-        for n in range(Ni):  # loop through inner loop
-            xj = rand(1, len(Sj)).flatten()
-            if (0 in Sjc) & (1 in Sjc):
-                pass
-            elif 0 in Sjc:
-                loc_1 = np.where(Sj == 1)[0][0]
-                b = norm.rvs(rho * a, np.sqrt(1 - rho ** 2))
-                xn2 = norm.cdf(b)
-                xj[loc_1] = xn2
-            elif 1 in Sjc:
-                loc_0 = np.where(Sj == 0)[0][0]
-                b = norm.rvs(rho * a, np.sqrt(1 - rho ** 2))
-                xn2 = norm.cdf(b)
-                xj[loc_0] = xn2
-            else:
-                loc_0 = np.where(Sj == 0)[0][0]
-                loc_1 = np.where(Sj == 1)[0][0]
-                a = multivariate_normal([0, 0], [[1, rho], [rho, 1]], 1).flatten()
-                xn2 = norm.cdf(a)
-                xj[loc_0] = xn2[0]
-                xj[loc_1] = xn2[1]
+        xj = rand(Ni, len(Sj))
+        #xj = rand(1, len(Sj)).flatten()
+        if (0 in Sjc) & (1 in Sjc):
+            pass
+        elif 0 in Sjc:
+            loc_1 = np.where(Sj == 1)[0][0]
+            b = norm.rvs(rho * a, np.sqrt(1 - rho ** 2), Ni)
+            xn2 = norm.cdf(b)
+            xj[:, loc_1] = xn2
+        elif 1 in Sjc:
+            loc_0 = np.where(Sj == 0)[0][0]
+            b = norm.rvs(rho * a, np.sqrt(1 - rho ** 2), Ni)
+            xn2 = norm.cdf(b)
+            xj[:, loc_0] = xn2
+        else:
+            loc_0 = np.where(Sj == 0)[0][0]
+            loc_1 = np.where(Sj == 1)[0][0]
+            a = multivariate_normal([0, 0], [[1, rho], [rho, 1]], Ni)
+            xn2 = norm.cdf(a)
+            xj[:, loc_0] = xn2[:, 0]
+            xj[:, loc_1] = xn2[:, 1]
 
-            x = np.concatenate([xj, xjc])
-            x_t[m * Ni + n, :] = x[s_index]
-        x_D = trans_wt(x_t, d)
-    return x_D
+        x = np.hstack([xj, np.tile(xjc, (Ni, 1))])
+        x_t[m*Ni:(m+1)*Ni, :] = x[:, s_index]
+    x_d = trans_wt(x_t, d)
+    return x_d
 

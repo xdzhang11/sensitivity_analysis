@@ -1,8 +1,8 @@
 #%% Shapley effects with wind parameters with Nataf transformation
 import joblib
 from f_shapley import shapley
-from f_X_gsa3_2 import X_dep_wt as X_dep
-from f_X_gsa3_2 import X_j_wt as X_j
+from f_X_gsa3 import X_dep_wt as X_dep
+from f_X_gsa3 import X_j_wt as X_j
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
