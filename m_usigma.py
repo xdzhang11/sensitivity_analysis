@@ -1,5 +1,5 @@
 # Joint and conditional distributions of u (wind speed) and sigma (standard deviation)
-# Last update 1/13/2013
+# Last update 1/13/2023
 # @author: xiazang@dtu.dk
 import numpy as np
 import matplotlib.pyplot as plt
@@ -186,19 +186,22 @@ def rvs_us(n, sigma):
     return rv
 
 
-# #%% check theoretical pdf and generated data
-# sigma = 1
+#%% check theoretical pdf and generated data
+# sigma = 1.5
 # rv = rvs_us(1e5, sigma)
 #
-# fig, ax = plt.subplots(1, 1)
 # x = np.linspace(3, 27, 100)
 # pdf_s = []
 # for k in range(100):
-#     pdf_s.append(pdf_us(x[k],sigma))
+#     pdf_s.append(pdf_us(x[k], sigma))
 #
-# plt.plot(x, pdf_s)
-# plt.hist(rv, 50, density=True)
-#
+# fig, ax = plt.subplots(1, 1)
+# plt.plot(x, pdf_s, 'r-', lw=2, alpha=0.6, label='pdf')
+# plt.hist(rv, 50, density=True, label='sample')
+# plt.xlabel('mean wind speed (m/s) ($\sigma$ = 1.5 m/s)')
+# plt.ylabel('conditional probability density')
+# plt.legend()
+# plt.savefig("Figures/pdf_u_sigma.pdf", format="pdf", bbox_inches="tight")
 # plt.show()
 
 

@@ -15,9 +15,13 @@ def cost(x):
 
 d = 3       # dimension of inputs
 Nv = 1000000  # MC sample size to estimate var(Y)
-Ni = 1000      # sample size for inner loop
-No = 10      # sample size for outer loop
-m = 1000
+# Ni = 1000      # sample size for inner loop
+# No = 3     # sample size for outer loop
+# m = 1000
+
+Ni = 3      # sample size for inner loop
+No = 1      # sample size for outer loop
+m = 1000000
 
 rho23_all = np.linspace(-0.99, 0.99, 20)
 s1 = []
@@ -55,5 +59,5 @@ plt.xlabel(r"$\rho_{X_2,X_3}$")
 
 plt.legend()
 
-plt.savefig("Figures/sh_gaussian.pdf", format="pdf", bbox_inches="tight")
+plt.savefig("Figures/sh_gaussian2.pdf", format="pdf", bbox_inches="tight")
 plt.show()
