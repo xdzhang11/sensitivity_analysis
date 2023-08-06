@@ -4,8 +4,14 @@ import json
 from cmath import pi
 from scipy.integrate import dblquad
 import matplotlib.pyplot as plt
+from m_usigma import rvs_j
+from scipy import stats
 
-
+#%% Correlation coefficient of IEC
+u,sigma = rvs_j(1e8)
+#cov = np.cov(u, sigma)
+res = stats.pearsonr(u, sigma)
+#%%
 fn_wb = "results/sigma_wb_pars.txt"
 wb_pars = json.load(open(fn_wb))
 
