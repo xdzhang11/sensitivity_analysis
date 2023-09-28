@@ -10,3 +10,6 @@ f_sobol.py: Sobol's indices calculation
 
 
 m_usigma.py: Joint and conditional distributions of u and sigma
+
+
+https://github.com/Hiperwind/PhDSchool
