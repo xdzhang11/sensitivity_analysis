@@ -23,7 +23,7 @@ X = df.iloc[:, 0:5]
 
 #%%
 varlist = ['bTD', 'Mx_blade', 'Mx_tower']
-var = varlist[2]
+var = varlist[0]
 
 y = df[var]  # blade tip clearance
 # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)

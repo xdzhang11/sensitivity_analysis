@@ -7,6 +7,14 @@ from scipy.stats import rayleigh, weibull_min
 from scipy.integrate import quad
 import json
 import time
+plt.rcParams['font.family'] = 'serif'
+plt.rcParams['font.serif'] = ['Computer Modern Roman']
+plt.rcParams['text.usetex'] = True
+
+plt.rcParams['axes.labelsize'] = 24  # Font size for x and y labels
+plt.rcParams['xtick.labelsize'] = 18 # Font size for x ticks
+plt.rcParams['ytick.labelsize'] = 18  # Font size for y ticks
+plt.rcParams['legend.fontsize'] = 18  # Font size for legend
 
 
 #%% Rayleigh pdf and its validation against scipy package
@@ -113,7 +121,7 @@ def rvs_s(n):
 
 
 
-#%% Compare pdf with generated sample
+# #%% Compare pdf with generated sample
 # rv = rvs_s(1e5)
 # # fit data to Weibull distribution
 # wb_pars = weibull_min.fit(rv)
@@ -121,17 +129,20 @@ def rvs_s(n):
 # pdf_s = []
 # for k in range(100):
 #     pdf_s.append(pdf_sigma(x[k]))
+# #
+# #%% Plot pdf and histogram of generated sample
+# fig, ax = plt.subplots(1, 1, figsize=(8,6))
+# plt.plot(x, pdf_s, 'r-', lw=4, alpha=0.6, label='Total probability theorem')
+# plt.hist(rv, 50, density=True, label='Histogram of generated sample')
+# plt.plot(x, weibull_min.pdf(x, wb_pars[0], wb_pars[1], wb_pars[2]), 'g--', lw=4, alpha=0.6, label='Weibull')
 #
-# fig, ax = plt.subplots(1, 1)
-# plt.plot(x, pdf_s, 'r-', lw=2, alpha=0.6, label='Total probability theorem')
-# plt.plot(x, weibull_min.pdf(x, wb_pars[0], wb_pars[1], wb_pars[2]), 'g--', lw=2, alpha=0.6, label='Weibull')
-# plt.hist(rv, 50, density=True, label='sample')
-# plt.xlabel('standard deviation of wind speed (m/s)')
-# plt.ylabel('probability density')
+# # plt.xlabel('standard deviation of wind speed (m/s)')
+# plt.ylabel('Probability density')
 # plt.legend()
+# plt.tight_layout()
 # plt.savefig("Figures/pdf_sigma.pdf", format="pdf", bbox_inches="tight")
 # plt.show()
-#
+
 # r = {'c': wb_pars[0], 'loc': wb_pars[1], 'scale': wb_pars[2]}
 # fn_wb = "results/sigma_wb_pars.txt"
 # json.dump(r, open(fn_wb, 'w'))
@@ -186,7 +197,7 @@ def rvs_us(n, sigma):
     return rv
 
 
-#%% check theoretical pdf and generated data
+# #%% check theoretical pdf and generated data
 # sigma = 1.5
 # rv = rvs_us(1e5, sigma)
 #
@@ -195,12 +206,14 @@ def rvs_us(n, sigma):
 # for k in range(100):
 #     pdf_s.append(pdf_us(x[k], sigma))
 #
-# fig, ax = plt.subplots(1, 1)
-# plt.plot(x, pdf_s, 'r-', lw=2, alpha=0.6, label='pdf')
-# plt.hist(rv, 50, density=True, label='sample')
-# plt.xlabel('mean wind speed (m/s) ($\sigma$ = 1.5 m/s)')
-# plt.ylabel('conditional probability density')
-# plt.legend()
+# #%%
+# fig, ax = plt.subplots(1, 1,figsize=(8,6))
+# plt.plot(x, pdf_s, 'r-', lw=4, alpha=0.6, label='Conditional PDF')
+# plt.hist(rv, 50, density=True, label='Histogram of generated sample')
+# # plt.xlabel('mean wind speed (m/s) ($\sigma$ = 1.5 m/s)')
+# plt.ylabel('Probability density')
+# plt.legend(fontsize=16)
+# # plt.tight_layout()
 # plt.savefig("Figures/pdf_u_sigma.pdf", format="pdf", bbox_inches="tight")
 # plt.show()
 

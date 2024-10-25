@@ -7,6 +7,14 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import time
+plt.rcParams['font.family'] = 'serif'
+plt.rcParams['font.serif'] = ['Computer Modern Roman']
+plt.rcParams['text.usetex'] = True
+
+plt.rcParams['axes.labelsize'] = 18  # Font size for x and y labels
+plt.rcParams['xtick.labelsize'] = 18 # Font size for x ticks
+plt.rcParams['ytick.labelsize'] = 18  # Font size for y ticks
+plt.rcParams['legend.fontsize'] = 18  # Font size for legend
 
 #%%
 start = time.time()
@@ -48,27 +56,34 @@ fn_sh_nataf = "results/sh_nataf_{}.txt".format(var)
 data = np.loadtxt(fn_sh_nataf)
 df = pd.DataFrame(data=data, index=cs, columns=['wsp', 'sigma', 'cl', 'bladeIx', 'towerIx'])
 
-plt.rcParams["figure.figsize"] = (6, 3)
+# plt.rcParams["figure.figsize"] = (6, 3)
 
-fig, ax = plt.subplots(1, 1)
-plt.plot(df.wsp, '--',  label='$u$')
-plt.plot(df.sigma, '-.', label='$\sigma$')
-plt.plot((df.wsp+df.sigma)/2, 'k', label='mean')
-plt.xlabel(r"Correlation coefficient $\rho_{\mu,\sigma}$")
-plt.legend()
-plt.tight_layout()
-plt.savefig("Figures/shap_nataf1_{}.pdf".format(var), format="pdf", bbox_inches="tight")
-plt.show()
+fig, axes = plt.subplots(1, 2, figsize=(12, 3))
 
-fig, ax = plt.subplots(1, 1)
-plt.ticklabel_format(axis='y', style='sci', scilimits=(0, 0))
-plt.plot(df.cl, '--', label='cl')
-plt.plot(df.bladeIx, '-.', label='blade Ix')
-plt.plot(df.towerIx, ':', label='tower Ix')
-plt.plot((df.cl+df.bladeIx+df.towerIx)/3, 'k', label='mean')
-plt.xlabel(r"Correlation coefficient $\rho_{\mu, \sigma}$")
-plt.legend()
+axes[0].plot(df.wsp, '--',  lw=3, alpha=0.9, label='$u$')
+axes[0].plot(df.sigma, '-.',  lw=3, alpha=0.9,label='$\sigma$')
+# plt.plot((df.wsp+df.sigma)/2, 'k', label='mean')
+axes[0].set_xlabel(r"Correlation coefficient $\rho_{\mu,\sigma}$")
+axes[0].set_ylabel("Shapley effects")
+axes[0].legend(loc='upper right',fontsize=14)
+
+# plt.savefig("Figures/shap_nataf1_{}.pdf".format(var), format="pdf", bbox_inches="tight")
+# plt.show()
+
+# fig, ax = plt.subplots(1, 1, figsize=(6, 3))
+axes[1].ticklabel_format(axis='y', style='sci', scilimits=(0, 0))
+axes[1].plot(df.cl, '--',  lw=3, alpha=0.9,label='$C_L$')
+axes[1].plot(df.bladeIx, '-.',  lw=3, alpha=0.9,label='blade Ix')
+axes[1].plot(df.towerIx, ':', lw=3, alpha=0.9, label='tower Ix')
+# plt.plot((df.cl+df.bladeIx+df.towerIx)/3, 'k', label='mean')
+axes[1].set_xlabel(r"Correlation coefficient $\rho_{\mu, \sigma}$")
+axes[1].set_ylabel("Shapley effects")
+tick_values = [0, 0.5e-2, 1e-2, 1.5e-2]  # Set your desired tick values here
+# tick_values = [0, 0.5e-2, 1e-2]  # Set your desired tick values here
+axes[1].set_yticks(tick_values)
+
+axes[1].legend(loc='upper right',fontsize=14)
 plt.tight_layout()
-plt.savefig("Figures/shap_nataf2_{}.pdf".format(var), format="pdf", bbox_inches="tight")
+plt.savefig("Figures/shap_nataf_{}.pdf".format(var), format="pdf", bbox_inches="tight")
 plt.show()
 

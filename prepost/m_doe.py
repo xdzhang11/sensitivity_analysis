@@ -7,14 +7,14 @@
 
 # %% Import packages
 from pickle import FALSE
-import qmcpy  # we import the environment at the start to use it
+# import qmcpy  # we import the environment at the start to use it
 import numpy as np  # basic numerical routines in Python
 import time  # timing routines
 import warnings  # to suppress warnings when needed
 # import torch  # only needed for PyTorch Sobol' backend
 import matplotlib.pyplot as plt  # plotting
-import tensorflow as tf
-import tensorflow_probability as tfp
+# import tensorflow as tf
+# import tensorflow_probability as tfp
 import pandas as pd
 
 from scipy.stats import qmc
@@ -22,6 +22,12 @@ from scipy.stats import qmc
 from matplotlib import style
 from numpy.random import rand
 
+plt.rcParams['font.family'] = 'serif'
+plt.rcParams['font.serif'] = ['Computer Modern Roman']
+plt.rcParams['text.usetex'] = True
+
+
+#%%
 
 # #%% defaut figure setting
 style.use('seaborn-white')
@@ -139,11 +145,15 @@ for k in range(100):
 qmc_dis_r_m = np.mean(qmc_dis_r)
 qmc_dis_h_m = np.mean(qmc_dis_h)
 
-fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(5*2, 5))
+fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(5*2, 4))
 ax[0].scatter(X_r[:, 0], X_r[:, 1], color=pt_clr[1])
-ax[0].set_title("Random")
+ax[0].set_title("Random",fontsize=16)
 ax[1].scatter(X_h[:, 0], X_h[:, 1], color=pt_clr[1])
-ax[1].set_title("Halton")
+ax[1].set_title("Halton",fontsize=16)
+ax[0].tick_params(axis='x', labelsize=14) # Change '10' to your desired font size for x-axis
+ax[0].tick_params(axis='y', labelsize=14)
+ax[1].tick_params(axis='x', labelsize=14) # Change '10' to your desired font size for x-axis
+ax[1].tick_params(axis='y', labelsize=14)
 plt.savefig("Figures/qms.pdf", format="pdf", bbox_inches="tight")
 plt.show()
 
