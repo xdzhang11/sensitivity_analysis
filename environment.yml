@@ -1,0 +1,9 @@
+name: shapley_effects  # Name of the conda environment
+channels:
+  - defaults
+dependencies:
+  - python=3.9
+  - joblib=1.3.0
+  - shap=0.41.0
+  - matplotlib=3.7.1
+  - pandas=1.5.3
