@@ -46,5 +46,6 @@ def compute_and_plot_shap(X, model_path, variable_name, feature_names, output_pa
     plt.tight_layout()
     os.makedirs(output_path, exist_ok=True)
     plt.savefig(os.path.join(output_path, f"shap_feature_{variable_name}.pdf"), format="pdf", bbox_inches="tight")
-    plt.show()
+    plt.close()
+
 
