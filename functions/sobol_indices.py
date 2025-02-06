@@ -1,7 +1,6 @@
 import numpy as np
 import copy
-from f_X_gsa0 import x_all
-
+from sample_generation import x_all
 
 def sobol(cost, d, n):
     X_A = x_all(n)
