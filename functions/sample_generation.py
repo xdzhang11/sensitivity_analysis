@@ -11,7 +11,7 @@ from numpy.linalg import multi_dot, inv
 #--------------------------------------------------------
 #gsa2
 from scipy.stats import norm, rayleigh, weibull_min, halfnorm
-from m_usigma import rvs_j, rvs_u, rvs_s, rvs_su, rvs_us
+from wind_distributions import rvs_j, rvs_u, rvs_s, rvs_su, rvs_us
 
 #--------------------------------------------------------
 #gsa3
