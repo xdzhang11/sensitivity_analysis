@@ -35,7 +35,7 @@ y =  cost(X_A)
 VarY0 = np.var(y)
 std0 = np.std(y)
 cov0 = std0/np.mean(y)
-# Plot bTD, histogram plot using density, save figure as pdf to Figures folder
+# Plot bTD, histogram plot using density, save figure as pdf to figures folder
 # set figure size
 fig, ax = plt.subplots(1, 1)
 ax.hist(y, bins=50, density=True)
@@ -45,9 +45,9 @@ ax.set_ylabel('Probability density')
 plt.tight_layout()
 tick_values = [0, 0.1,0.2]  # Set your desired tick values here
 ax.set_yticks(tick_values)
-plt.savefig("Figures/hist_bTD.pdf", format="pdf", bbox_inches="tight")
+plt.savefig("figures/hist_bTD.pdf", format="pdf", bbox_inches="tight")
 # jpg
-# plt.savefig("Figures/bTD_hist.jpg", format="jpg", bbox_inches="tight")
+# plt.savefig("figures/bTD_hist.jpg", format="jpg", bbox_inches="tight")
 plt.show()
 
 
@@ -67,7 +67,7 @@ y =  cost(X_A)
 VarY1 = np.var(y)
 std1 = np.std(y)
 cov1 = std1/np.mean(y)
-# Plot Mx_blade, histogram plot using density, save figure as pdf to Figures folder
+# Plot Mx_blade, histogram plot using density, save figure as pdf to figures folder
 fig, ax = plt.subplots(1, 1)
 ax.hist(y, bins=50, density=True)
 # ax.set_xlabel('Mx blade (kNm)', fontsize=12)
@@ -78,9 +78,9 @@ tick_values = [0.1e-5, 2.00e-5, 4.00e-5]  # Set your desired tick values here
 ax.set_yticks(tick_values)
 
 plt.tight_layout()
-plt.savefig("Figures/hist_Mx_blade.pdf", format="pdf", bbox_inches="tight")
+plt.savefig("figures/hist_Mx_blade.pdf", format="pdf", bbox_inches="tight")
 # jpg
-# plt.savefig("Figures/Mx_blade_hist.jpg", format="jpg", bbox_inches="tight")
+# plt.savefig("figures/Mx_blade_hist.jpg", format="jpg", bbox_inches="tight")
 plt.show()
 
 # Mx_tower
@@ -98,7 +98,7 @@ y =  cost(X_A)
 VarY2 = np.var(y)
 std2 = np.std(y)
 cov2 = std2/np.mean(y)
-# Plot Mx_tower, histogram plot using density, save figure as pdf to Figures folder
+# Plot Mx_tower, histogram plot using density, save figure as pdf to figures folder
 fig, ax = plt.subplots(1, 1)
 ax.hist(y, bins=50, density=True)
 # ax.set_xlabel('Mx tower (kNm)', fontsize=12)
@@ -107,7 +107,7 @@ tick_values = [0, 0.5e-5, 1.0e-5]  # Set your desired tick values here
 ax.set_yticks(tick_values)
 plt.tight_layout()
 
-plt.savefig("Figures/hist_Mx_tower.pdf", format="pdf", bbox_inches="tight")
+plt.savefig("figures/hist_Mx_tower.pdf", format="pdf", bbox_inches="tight")
 # jpg
-# plt.savefig("Figures/Mx_tower_hist.jpg", format="jpg", bbox_inches="tight")
+# plt.savefig("figures/Mx_tower_hist.jpg", format="jpg", bbox_inches="tight")
 plt.show()
