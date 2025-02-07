@@ -7,9 +7,6 @@ import lightgbm as lgb
 from catboost import CatBoostRegressor
 from sklearn.linear_model import LinearRegression
 
-from main1_metamodel import cvs_lr
-
-
 def train_and_save_metamodels(X, y, var):
     # Random Forest
     print("Training Random Forest...")
