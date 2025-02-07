@@ -11,11 +11,11 @@ from numpy.linalg import multi_dot, inv
 #--------------------------------------------------------
 #gsa2
 from scipy.stats import norm, rayleigh, weibull_min, halfnorm
-from wind_distributions import rvs_j, rvs_u, rvs_s, rvs_su, rvs_us
+from functions.wind_distributions import rvs_j, rvs_u, rvs_s, rvs_su, rvs_us
 
 #--------------------------------------------------------
 #gsa3
-fn_wb = "results/sigma_wb_pars.txt"
+fn_wb = "data/sigma_wb_pars.txt"
 wb_pars = json.load(open(fn_wb))
 
 
