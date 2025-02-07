@@ -8,13 +8,14 @@ from functions.feature_importance import compute_and_plot_shap
 ## task sobol
 from functions.sobol_indices import sobol_analysis
 from functions.sample_generation import x_all
-## task gsa_theoretical
-from functions.shapley_analysis import run_shapley_iec
+## task gsa_iec, gsa_nataf
+from functions.shapley_analysis import run_shapley_iec, run_shapley_nataf
+
 
 def main():
     # Argument parser setup
     parser = argparse.ArgumentParser(description="Run feature importance, model training, or global sensitivity analysis.")
-    parser.add_argument("task", choices=["train_metamodels", "feature_importance", "sobol", "shapley_iec"], help="Task to execute")
+    parser.add_argument("task", choices=["train_metamodels", "feature_importance", "sobol", "shapley_iec", "shapley_nataf"], help="Task to execute")
     args = parser.parse_args()
 
     # Define common parameters
@@ -52,12 +53,12 @@ def main():
 
         elif args.task == "shapley_iec":
             print(f"Running Shapley effects analysis with IEC distributions for {var}...")
-            model_path = f"models/cb_{var}.joblib"
-            Nv = 1000000  # MC sample size to estimate var(Y)
-            Ni = 100  # sample size for inner loop
-            No = 10  # sample size for outer loop
-            m = 10000
-            run_shapley_iec(Nv, Ni, No, m, model_path, var)
+            run_shapley_iec(Nv=1000000, Ni=100, No=10, m=10000, model_path=f"models/cb_{var}.joblib", var=var)
+            print(f"Shapley effects analysis completed for {var}")
+
+        elif args.task == "shapley_nataf":
+            print(f"Running Shapley effects analysis with Nataf transformation for {var}...")
+            run_shapley_nataf(Nv=1000000, Ni=1000, No=10, m=10000, model_path=f"models/cb_{var}.joblib", var=var)
             print(f"Shapley effects analysis completed for {var}")
 
 if __name__ == "__main__":
