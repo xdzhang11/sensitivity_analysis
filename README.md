@@ -1,5 +1,10 @@
 Global sensitivity analysis
 
+Code for paper:
+Variable importance analysis of wind turbine extreme responses with Shapley value explanation
+
+https://doi.org/10.1016/j.renene.2024.121049
+
 
 ### Environment:
 conda env create -f environment.yml  
