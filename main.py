@@ -3,6 +3,8 @@ import pandas as pd
 import os
 ## task train_metamodels
 from functions.train_metamodels import train_and_save_metamodels
+## task uncertainty_quantification
+from functions.uncertainty_quantification import plot_histogram
 ## task feature_importance
 from functions.feature_importance import compute_and_plot_shap
 ## task sobol
@@ -15,7 +17,8 @@ from functions.shapley_analysis import run_shapley_iec, run_shapley_nataf
 def main():
     # Argument parser setup
     parser = argparse.ArgumentParser(description="Run feature importance, model training, or global sensitivity analysis.")
-    parser.add_argument("task", choices=["train_metamodels", "feature_importance", "sobol", "shapley_iec", "shapley_nataf"], help="Task to execute")
+    parser.add_argument("task", choices=["train_metamodels", "uncertainty_quantification", "feature_importance",
+                                         "sobol", "shapley_iec", "shapley_nataf"], help="Task to execute")
     args = parser.parse_args()
 
     # Define common parameters
@@ -28,22 +31,28 @@ def main():
         X = df.iloc[:, 0:5]
 
     for var in varlist:
+
+        model_path = f"models/cb_{var}.joblib"
+
         # Execute tasks
         if args.task == "train_metamodels":
             print(f"\nTraining metamodels for target: {var}")
             y = df[var]
             train_and_save_metamodels(X, y, var)
 
+        elif args.task == "uncertainty_quantification":
+            print(f"\nRunning uncertainty quantification for {var}...")
+            var_y, std_y, cov_y = plot_histogram(var, model_path, Nv= 10000, rho= 0.2)
+            # Print statistics
+            print(f"Variable: {var}, Variance: {var_y:.5f}, Std Dev: {std_y:.5f}, CoV: {cov_y:.5f}")
+
         elif args.task == "feature_importance":
             feature_names = [r'$u$', r'$\sigma$', r'$C_L$', 'blade Ix', 'tower Ix']
-            output_path = 'figures'
             print(f"Running  feature importance for {var}...")
-            model_path = f"models/cb_{var}.joblib"  # CatBoost model
-            compute_and_plot_shap(X, model_path, var, feature_names, output_path)
+            compute_and_plot_shap(X, model_path, var, feature_names, output_path='figures')
 
         elif args.task == "sobol":
             print(f"\nRunning Sobol analysis for {var}...")
-            model_path = f"models/cb_{var}.joblib"
             sobol_results = sobol_analysis(model_path, n=int(5e7), d=5, sample_inputs=x_all)
             # Save results
             result_file = f"results/sobol_{var}.txt"
@@ -53,12 +62,12 @@ def main():
 
         elif args.task == "shapley_iec":
             print(f"Running Shapley effects analysis with IEC distributions for {var}...")
-            run_shapley_iec(Nv=1000000, Ni=100, No=10, m=10000, model_path=f"models/cb_{var}.joblib", var=var)
+            run_shapley_iec(Nv=1000000, Ni=100, No=10, m=10000, model_path=model_path, var=var)
             print(f"Shapley effects analysis completed for {var}")
 
         elif args.task == "shapley_nataf":
             print(f"Running Shapley effects analysis with Nataf transformation for {var}...")
-            run_shapley_nataf(Nv=1000000, Ni=1000, No=10, m=10000, model_path=f"models/cb_{var}.joblib", var=var)
+            run_shapley_nataf(Nv=1000000, Ni=1000, No=10, m=10000, model_path=model_path, var=var)
             print(f"Shapley effects analysis completed for {var}")
 
 if __name__ == "__main__":
